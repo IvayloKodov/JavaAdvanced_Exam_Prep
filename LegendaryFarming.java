@@ -1,74 +1,67 @@
 package com.company;
 
-import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-public class LegendaryFarming {
-    static int Shadowmourne = 250;
-    static int Valanyr = 250;
-    static int Dragonwrath = 250;
-
+public class test {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Map<String, Integer> materials = new TreeMap<>();
-        materials.put("shards",0);
-        materials.put("fragments",0);
-        materials.put("motes",0);
-
-        Map<String, Integer> junks = new TreeMap<>();
-
-        int shardsQuanty = 0;
-        int fragmentsQuanty = 0;
-        int motesQuanty = 0;
+        TreeMap<String, Integer> treasures = new TreeMap<>();
+        TreeMap<String, Integer> junkes = new TreeMap<>();
+        int shards = 0;
+        int fragments = 0;
+        int motes = 0;
 
         while (true) {
-            int quantity = sc.nextInt();
-            String material = sc.next().toLowerCase();
-            if (material.equals("shards")) {
-                shardsQuanty += quantity;
-                if (shardsQuanty >= Shadowmourne) {
-                    shardsQuanty -= Shadowmourne;
-                    System.out.println("Shadowmourne obtained!");
-                    materials.put(material, shardsQuanty);
+            if (shards >= 250) {
+                System.out.println("Shadowmourne obtained!");
+                shards -= 250;
+                break;
+            } else if (fragments >= 250) {
+                System.out.println("Valanyr obtained!");
+                fragments -= 250;
+                break;
+            } else if (motes >= 250) {
+                System.out.println("Dragonwrath obtained!");
+                motes -= 250;
+                break;
+            }
+            String[] materials = sc.nextLine().toLowerCase().trim().split("\\s+");
+            for (int item = 0; item < materials.length; item += 2) {
+                int quantity = Integer.parseInt(materials[item]);
+                String material = materials[item + 1];
+                if (shards >= 250 || fragments >= 250 || motes >= 250) {
                     break;
-                } else {
-                    materials.put(material, shardsQuanty);
                 }
-            } else if (material.equals("fragments")) {
-                fragmentsQuanty += quantity;
-                if (fragmentsQuanty >= Valanyr) {
-                    fragmentsQuanty -= Valanyr;
-                    System.out.println("Valanyr obtained!");
-                    materials.put(material, fragmentsQuanty);
-                    break;
-                } else {
-                    materials.put(material, fragmentsQuanty);
+                switch (material) {
+                    case "shards":
+                        shards += quantity;
+                        break;
+                    case "fragments":
+                        fragments += quantity;
+
+                        break;
+                    case "motes":
+                        motes += quantity;
+                        break;
+                    default:
+                        if (!junkes.containsKey(material)) {
+                            junkes.put(material, 0);
+                        }
+                        junkes.put(material, junkes.get(material) + quantity);
+                        break;
                 }
-            } else if (material.equals("motes")) {
-                motesQuanty += quantity;
-                if (motesQuanty >= Dragonwrath) {
-                    motesQuanty -= Dragonwrath;
-                    System.out.println("Dragonwrath obtained!");
-                    materials.put(material, motesQuanty);
-                    break;
-                } else {
-                    materials.put(material, motesQuanty);
-                }
-            } else {
-                if (!junks.containsKey(material)) {
-                    junks.put(material, 0);
-                }
-                junks.put(material, junks.get(material) + quantity);
             }
         }
-        materials.entrySet().stream()
-                .sorted((q1,q2)-> Integer.compare(q2.getValue(),q1.getValue()))
-                .forEach(entry ->{
-                    System.out.printf("%s: %d\n", entry.getKey(),entry.getValue());
-                });
-        junks.entrySet().stream().forEach(entry->{
-            System.out.printf("%s: %d\n",entry.getKey(),entry.getValue());
-        });
+        treasures.put("shards", shards);
+        treasures.put("fragments", fragments);
+        treasures.put("motes", motes);
+
+        treasures.entrySet().stream()
+                .sorted((m1, m2) -> m2.getValue().compareTo(m1.getValue()))
+                .forEach(material -> System.out.printf("%s: %d\n", material.getKey(), material.getValue()));
+
+        junkes.entrySet().stream()
+                .forEach(junk -> System.out.printf("%s: %d\n", junk.getKey(), junk.getValue()));
     }
 }
