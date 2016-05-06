@@ -4,48 +4,38 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WeirdScript {
+public class test {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int keyNumber = Integer.parseInt(sc.nextLine());
-        String bounderies = keyGenerator(keyNumber);
-        StringBuilder text = new StringBuilder();
-        String regex = bounderies + "\\s*(.*?)\\s*" + bounderies;
-        Pattern pattern = Pattern.compile(regex);
-
+        int number = Integer.parseInt(sc.nextLine());
+        String key = keyGenerator(number);
+        String regex = key+"\\s*(.*?)\\s*"+key;
+        Pattern pattern= Pattern.compile(regex);
+        StringBuilder sb= new StringBuilder();
         while (true) {
-            String input = sc.nextLine();
-            if (input.equals("End")) {
+            String text = sc.nextLine();
+            if (text.equals("End")) {
                 break;
             }
-            text.append(input);
+            sb.append(text);
         }
-        Matcher matcher = pattern.matcher(text.toString());
-        while (matcher.find()) {
+        Matcher matcher = pattern.matcher(sb.toString());
+        while (matcher.find()){
             System.out.println(matcher.group(1));
         }
     }
 
-    private static String keyGenerator(int keyInput) {
-        String key = "";
-
-        if (keyInput % 52 > 26) {
-            for (char j = 'A', counter = 27; j <= 'Z'; j++, counter++) {
-                if (counter == keyInput % 52) {
-                    key = "" + j + j;
-                    break;
-                }
-            }
-        } else if (keyInput % 52 == 0) {
-            key = "ZZ";
-        } else {
-            for (char j = 'a', counter = 1; j <= 'z'; j++, counter++) {
-                if (counter == keyInput % 52) {
-                    key = "" + j + j;
-                    break;
-                }
-            }
+    private static String keyGenerator(int number) {
+        number = number % 52;
+        if (number == 0) {
+            number=52;
         }
-        return key;
+        String key = "";
+        if (number <= 26) {
+            key += (char) (number + 96);
+        } else {
+            key += (char) (number + 38);
+        }
+        return key + key;
     }
 }
